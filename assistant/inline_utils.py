@@ -237,30 +237,27 @@ async def owo(client, inline_query):
         bttn = [
             [
                 InlineKeyboardButton(
-                    text="Command Help", callback_data=f"make_cmd_buttons"
+                    text="Command Help", callback_data="make_cmd_buttons"
                 )
             ],
             [
-             InlineKeyboardButton(
-                    text="Restart UserBot", callback_data=f"restart_bot"
-                )
-            ],  
-            [
-             InlineKeyboardButton(
-                    text="Update UserBot", callback_data=f"updTe_bot"
+                InlineKeyboardButton(
+                    text="Restart UserBot", callback_data="restart_bot"
                 )
             ],
             [
-             InlineKeyboardButton(
-                    text="SyS Info", callback_data=f"sys_info"
+                InlineKeyboardButton(
+                    text="Update UserBot", callback_data="updTe_bot"
                 )
             ],
+            [InlineKeyboardButton(text="SyS Info", callback_data="sys_info")],
             [
-             InlineKeyboardButton(
-                    text="Change UserBot Language", callback_data=f"change_lang"
+                InlineKeyboardButton(
+                    text="Change UserBot Language", callback_data="change_lang"
                 )
             ],
         ]
+
         if Config.LOAD_UNOFFICIAL_PLUGINS:
             total_ = len(XTRA_CMD_LIST) + len(CMD_LIST)
         nice_text = f"**FridayUserBot Commands** \n**Friday Version :** __{friday_version}__ \n**PyroGram Version :** __{__version__}__ \n**Total Plugins Loaded :** __{total_}__"
@@ -381,32 +378,29 @@ async def nothing_here(client, cb):
 async def black_menu(client, cb):
     total_ = len(CMD_LIST)
     bttn = [
-            [
-                InlineKeyboardButton(
-                    text="Command Help", callback_data=f"make_cmd_buttons"
-                )
-            ],
-            [
-             InlineKeyboardButton(
-                    text="Restart UserBot", callback_data=f"restart_bot"
-                )
-            ],  
-            [
-             InlineKeyboardButton(
-                    text="Update UserBot", callback_data=f"updTe_bot"
-                )
-            ],
-            [
-             InlineKeyboardButton(
-                    text="SyS Info", callback_data=f"sys_info"
-                )
-            ],
         [
-             InlineKeyboardButton(
-                    text="Change UserBot Language", callback_data=f"change_lang"
-                )
-            ],
-        ]
+            InlineKeyboardButton(
+                text="Command Help", callback_data="make_cmd_buttons"
+            )
+        ],
+        [
+            InlineKeyboardButton(
+                text="Restart UserBot", callback_data="restart_bot"
+            )
+        ],
+        [
+            InlineKeyboardButton(
+                text="Update UserBot", callback_data="updTe_bot"
+            )
+        ],
+        [InlineKeyboardButton(text="SyS Info", callback_data="sys_info")],
+        [
+            InlineKeyboardButton(
+                text="Change UserBot Language", callback_data="change_lang"
+            )
+        ],
+    ]
+
     if Config.LOAD_UNOFFICIAL_PLUGINS:
         total_ = len(XTRA_CMD_LIST) + len(CMD_LIST)
     nice_text = f"**FridayUserBot Commands** \n**Friday Version :** __{friday_version}__ \n**PyroGram Version :** __{__version__}__ \n**Total Plugins Loaded :** __{total_}__"
@@ -416,38 +410,41 @@ async def black_menu(client, cb):
 @cb_wrapper
 async def cmd_buutton(client, cb):
     bttn = [
+        [
+            InlineKeyboardButton(
+                text="Main Command Help",
+                callback_data="make_basic_button_True",
+            )
+        ],
+        [
+            InlineKeyboardButton(
+                text="Back 🔙", callback_data="backO_to_help_menu"
+            )
+        ],
+    ]
+
+    if Config.LOAD_UNOFFICIAL_PLUGINS:
+        total_ = len(XTRA_CMD_LIST) + len(CMD_LIST)
+        bttn = [
             [
                 InlineKeyboardButton(
-                    text="Main Command Help", callback_data=f"make_basic_button_True"
+                    text="Xtra Command Help",
+                    callback_data="make_basic_button_False",
                 )
             ],
             [
                 InlineKeyboardButton(
-                    text="Back 🔙", callback_data=f"backO_to_help_menu"
+                    text="Main Command Help",
+                    callback_data="make_basic_button_True",
                 )
-            ]
+            ],
+            [
+                InlineKeyboardButton(
+                    text="Back 🔙", callback_data="backO_to_help_menu"
+                )
+            ],
         ]
-    if Config.LOAD_UNOFFICIAL_PLUGINS:
-        total_ = len(XTRA_CMD_LIST) + len(CMD_LIST)
-        bttn = [
-                [
-                    InlineKeyboardButton(
-                        text="Xtra Command Help",
-                        callback_data=f"make_basic_button_False",
-                    )
-                ],
-                [
-                    InlineKeyboardButton(
-                        text="Main Command Help",
-                        callback_data=f"make_basic_button_True",
-                    )
-                ],
-                [
-                    InlineKeyboardButton(
-                        text="Back 🔙", callback_data=f"backO_to_help_menu"
-                    )
-                ]
-            ]
+
     await cb.edit_message_reply_markup(reply_markup=InlineKeyboardMarkup(bttn))
 
 @bot.on_callback_query(filters.regex(pattern="restart_bot"))
@@ -455,11 +452,12 @@ async def cmd_buutton(client, cb):
 async def roaststart(client, cb):
     bttn = [
         [
-                InlineKeyboardButton(
-                    text="Back 🔙", callback_data=f"backO_to_help_menu"
-                )
-            ]
+            InlineKeyboardButton(
+                text="Back 🔙", callback_data="backO_to_help_menu"
+            )
+        ]
     ]
+
     await cb.edit_message_text("`Please Wait, Restarting... This May Take A While`", reply_markup=InlineKeyboardMarkup(bttn))
     args = [sys.executable, "-m", "main_startup"]
     execle(sys.executable, *args, environ)
@@ -470,11 +468,12 @@ async def roaststart(client, cb):
 async def update_it(client, cb):
     bttn = [
         [
-                InlineKeyboardButton(
-                    text="Back 🔙", callback_data=f"backO_to_help_menu"
-                )
-            ]
+            InlineKeyboardButton(
+                text="Back 🔙", callback_data="backO_to_help_menu"
+            )
+        ]
     ]
+
     await cb.edit_message_text("`Updating Please Wait!`", reply_markup=InlineKeyboardMarkup(bttn))
     try:
         repo = Repo()
@@ -530,11 +529,12 @@ async def update_it(client, cb):
 async def fuck_arch_btw(client, cb):
     bttn = [
         [
-                InlineKeyboardButton(
-                    text="Back 🔙", callback_data=f"backO_to_help_menu"
-                )
-            ]
+            InlineKeyboardButton(
+                text="Back 🔙", callback_data="backO_to_help_menu"
+            )
+        ]
     ]
+
     splatform = platform.system()
     platform_release = platform.release()
     platform_version = platform.version()
@@ -575,13 +575,12 @@ async def fuck_arch_btw(client, cb):
 @bot.on_callback_query(filters.regex(pattern="make_basic_button_(True|False)"))
 @cb_wrapper
 async def wow_nice(client, cb):
-    nice = cb.matches[0].group(1) != "False"
-    if not nice:
-        v_t = XTRA_CMD_LIST
-        bttn = paginate_help(0, XTRA_CMD_LIST, "helpme", is_official=nice)
-    else:
+    if nice := cb.matches[0].group(1) != "False":
         v_t = CMD_LIST
         bttn = paginate_help(0, CMD_LIST, "helpme", is_official=nice)
+    else:
+        v_t = XTRA_CMD_LIST
+        bttn = paginate_help(0, XTRA_CMD_LIST, "helpme", is_official=nice)
     await cb.edit_message_text(
         f"Command List & Help \n**Total Commands :** `{len(v_t)}` \n**(C) @FRIDAYOT**",
         reply_markup=InlineKeyboardMarkup(bttn),

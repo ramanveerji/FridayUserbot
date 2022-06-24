@@ -106,8 +106,9 @@ async def blockz(client, message):
         if await is_user_approved(int(message.chat.id)):
             await disapprove_user(int(message.chat.id))
         await message.edit(
-            "Blocked [{}](tg://user?id={})".format(firstname, int(message.chat.id))
+            f"Blocked [{firstname}](tg://user?id={int(message.chat.id)})"
         )
+
         await client.block_user(int(message.chat.id))
         await asyncio.sleep(3)
         await message.delete()
@@ -120,10 +121,9 @@ async def blockz(client, message):
         if await is_user_approved(message.reply_to_message.from_user.id):
             await disapprove_user(message.reply_to_message.from_user.id)
         await message.edit(
-            "Blocked [{}](tg://user?id={})".format(
-                firstname, message.reply_to_message.from_user.id
-            )
+            f"Blocked [{firstname}](tg://user?id={message.reply_to_message.from_user.id})"
         )
+
         await client.block_user(message.reply_to_message.from_user.id)
         await asyncio.sleep(3)
         await message.delete()
@@ -148,10 +148,9 @@ async def unmblock(client, message):
         user_ = await client.get_users(message.reply_to_message.from_user.id)
         firstname = user_.first_name
         await message.edit(
-            "Un-Blocked [{}](tg://user?id={})".format(
-                firstname, message.reply_to_message.from_user.id
-            )
+            f"Un-Blocked [{firstname}](tg://user?id={message.reply_to_message.from_user.id})"
         )
+
         await client.unblock_user(message.reply_to_message.from_user.id)
         await asyncio.sleep(3)
         await message.delete()
@@ -182,10 +181,9 @@ async def allow(client, message):
             await message.delete()
             return
         await message.edit(
-            "Approved to pm [{}](tg://user?id={})".format(
-                firstname, int(message.chat.id)
-            )
+            f"Approved to pm [{firstname}](tg://user?id={int(message.chat.id)})"
         )
+
         await asyncio.sleep(3)
         await message.delete()
     elif message.chat.type == "supergroup":
@@ -202,10 +200,9 @@ async def allow(client, message):
             await message.delete()
             return
         await message.edit(
-            "Approved to pm [{}](tg://user?id={})".format(
-                firstname, message.reply_to_message.from_user.id
-            )
+            f"Approved to pm [{firstname}](tg://user?id={message.reply_to_message.from_user.id})"
         )
+
         await asyncio.sleep(3)
         await message.delete()
 
@@ -234,10 +231,9 @@ async def disallow(client, message):
             await message.delete()
             return
         await message.edit(
-            "DisApproved to pm [{}](tg://user?id={})".format(
-                firstname, int(message.chat.id)
-            )
+            f"DisApproved to pm [{firstname}](tg://user?id={int(message.chat.id)})"
         )
+
         await asyncio.sleep(3)
         await message.delete()
     elif message.chat.type == "supergroup":
@@ -255,10 +251,9 @@ async def disallow(client, message):
             await message.delete()
             return
         await message.edit(
-            "DisApproved to pm [{}](tg://user?id={})".format(
-                firstname, message.reply_to_message.from_user.id
-            )
+            f"DisApproved to pm [{firstname}](tg://user?id={message.reply_to_message.from_user.id})"
         )
+
         await asyncio.sleep(3)
         await message.delete()
 
