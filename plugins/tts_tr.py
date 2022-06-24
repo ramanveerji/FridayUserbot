@@ -63,7 +63,7 @@ async def gibspeech(client, message):
         await event.edit(engine.get_string("NEEDS_REPLY").format("Convert To Speech"))
         return
     text = message.reply_to_message.text
-    language = "en" if not ttslang else ttslang
+    language = ttslang or "en"
     kk = gtts.lang.tts_langs()
     if not kk.get(language):
         await event.edit(engine.get_string("UNSUPPORTED").format("Corrent Language Code"))

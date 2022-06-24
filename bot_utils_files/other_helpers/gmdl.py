@@ -607,7 +607,7 @@ class googleimagesdownload:
 
         element = browser.find_element_by_tag_name("body")
         # Scroll down
-        for i in range(30):
+        for _ in range(30):
             element.send_keys(Keys.PAGE_DOWN)
             time.sleep(0.3)
 
@@ -654,9 +654,7 @@ class googleimagesdownload:
         start_line = s.find('class="dtviD"')
         start_content = s.find('href="', start_line + 1)
         end_content = s.find('">', start_content + 1)
-        url_item = "https://www.google.com" + str(
-            s[start_content + 6 : end_content]
-        )
+        url_item = f"https://www.google.com{str(s[start_content + 6 : end_content])}"
         url_item = url_item.replace("&amp;", "&")
 
         start_line_2 = s.find('class="dtviD"')
@@ -744,10 +742,10 @@ class googleimagesdownload:
             image_name = image_name[: image_name.find("?")]
         # if ".jpg" in image_name or ".gif" in image_name or ".png" in image_name or ".bmp" in image_name or ".svg" in image_name or ".webp" in image_name or ".ico" in image_name:
         if any(map(lambda extension: extension in image_name, extensions)):
-            file_name = main_directory + "/" + image_name
+            file_name = f"{main_directory}/{image_name}"
         else:
-            file_name = main_directory + "/" + image_name + ".jpg"
-            image_name = image_name + ".jpg"
+            file_name = f"{main_directory}/{image_name}.jpg"
+            image_name = f"{image_name}.jpg"
 
         try:
             with open(file_name, "wb") as output_file:
@@ -861,9 +859,7 @@ class googleimagesdownload:
 
         if arguments["exact_size"]:
             size_array = [x.strip() for x in arguments["exact_size"].split(",")]
-            exact_size = (
-                ",isz:ex,iszw:" + str(size_array[0]) + ",iszh:" + str(size_array[1])
-            )
+            exact_size = f",isz:ex,iszw:{str(size_array[0])},iszh:{str(size_array[1])}"
         else:
             exact_size = ""
 
@@ -968,7 +964,7 @@ class googleimagesdownload:
                 },
             ],
         }
-        for key, value in params.items():
+        for value in params.values():
             if value[0] is not None:
                 ext_param = value[1][value[0]]
                 # counter will tell if it is first param added or not
@@ -976,7 +972,7 @@ class googleimagesdownload:
                     # add it to the built url
                     built_url += ext_param
                 else:
-                    built_url = built_url + "," + ext_param
+                    built_url = f"{built_url},{ext_param}"
                 counter += 1
         built_url = lang_url + built_url + exact_size + time_range
         return built_url
@@ -1039,9 +1035,12 @@ class googleimagesdownload:
         search_keyword = []
         with codecs.open(file_name, "r", encoding="utf-8-sig") as f:
             if ".csv" in file_name or ".txt" in file_name:
-                for line in f:
-                    if line not in ["\n", "\r\n"]:
-                        search_keyword.append(line.replace("\n", "").replace("\r", ""))
+                search_keyword.extend(
+                    line.replace("\n", "").replace("\r", "")
+                    for line in f
+                    if line not in ["\n", "\r\n"]
+                )
+
             else:
                 stark.info(
                     "Invalid file type: Valid file types are either .txt or .csv \n"
@@ -1052,7 +1051,7 @@ class googleimagesdownload:
 
     # make directories
     def create_directories(self, main_directory, dir_name, thumbnail, thumbnail_only):
-        dir_name_thumbnail = dir_name + " - thumbnail"
+        dir_name_thumbnail = f"{dir_name} - thumbnail"
         # make a search keyword  directory
         try:
             if not os.path.exists(main_directory):
@@ -1089,7 +1088,7 @@ class googleimagesdownload:
         ignore_urls,
     ):
         if print_urls or no_download:
-            stark.info("Image URL: " + image_url)
+            stark.info(f"Image URL: {image_url}")
         if no_download:
             return "success", "Printed url without downloading"
         try:
@@ -1101,11 +1100,7 @@ class googleimagesdownload:
             )
             try:
                 # timeout time to download an image
-                if socket_timeout:
-                    timeout = float(socket_timeout)
-                else:
-                    timeout = 10
-
+                timeout = float(socket_timeout) if socket_timeout else 10
                 response = urlopen(req, None, timeout)
                 data = response.read()
                 response.close()
@@ -1120,14 +1115,12 @@ class googleimagesdownload:
                 )
 
                 try:
-                    output_file = open(path, "wb")
-                    output_file.write(data)
-                    output_file.close()
+                    with open(path, "wb") as output_file:
+                        output_file.write(data)
                     if save_source:
-                        list_path = main_directory + "/" + save_source + ".txt"
-                        list_file = open(list_path, "a")
-                        list_file.write(path + "\t" + img_src + "\n")
-                        list_file.close()
+                        list_path = f"{main_directory}/{save_source}.txt"
+                        with open(list_path, "a") as list_file:
+                            list_file.write(path + "\t" + img_src + "\n")
                 except OSError as e:
                     download_status = "fail"
                     download_message = (
@@ -1140,13 +1133,11 @@ class googleimagesdownload:
                     )
 
                 download_status = "success"
-                download_message = (
-                    "Completed Image Thumbnail ====> " + return_image_name
-                )
+                download_message = f"Completed Image Thumbnail ====> {return_image_name}"
 
                 # image size parameter
                 if print_size:
-                    stark.info("Image Size: " + str(self.file_size(path)))
+                    stark.info(f"Image Size: {str(self.file_size(path))}")
 
             except UnicodeEncodeError as e:
                 download_status = "fail"
@@ -1204,17 +1195,15 @@ class googleimagesdownload:
         format,
         ignore_urls,
     ):
-        if not silent_mode:
-            if print_urls or no_download:
-                stark.info("Image URL: " + image_url)
-        if ignore_urls:
-            if any(url in image_url for url in ignore_urls.split(",")):
-                return (
-                    "fail",
-                    "Image ignored due to 'ignore url' parameter",
-                    None,
-                    image_url,
-                )
+        if not silent_mode and (print_urls or no_download):
+            stark.info(f"Image URL: {image_url}")
+        if ignore_urls and any(url in image_url for url in ignore_urls.split(",")):
+            return (
+                "fail",
+                "Image ignored due to 'ignore url' parameter",
+                None,
+                image_url,
+            )
         if thumbnail_only:
             return (
                 "success",
@@ -1233,11 +1222,7 @@ class googleimagesdownload:
             )
             try:
                 # timeout time to download an image
-                if socket_timeout:
-                    timeout = float(socket_timeout)
-                else:
-                    timeout = 10
-
+                timeout = float(socket_timeout) if socket_timeout else 10
                 response = urlopen(req, None, timeout)
                 data = response.read()
                 info = response.info()
@@ -1250,7 +1235,7 @@ class googleimagesdownload:
                 image_name = str(image_url[slash:qmark]).lower()
 
                 type = info.get_content_type()
-                if type == "image/jpeg" or type == "image/jpg":
+                if type in ["image/jpeg", "image/jpg"]:
                     if not image_name.endswith(".jpg") and not image_name.endswith(
                         ".jpeg"
                     ):
@@ -1264,10 +1249,10 @@ class googleimagesdownload:
                 elif type == "image/gif":
                     if not image_name.endswith(".gif"):
                         image_name += ".gif"
-                elif type == "image/bmp" or type == "image/x-windows-bmp":
+                elif type in ["image/bmp", "image/x-windows-bmp"]:
                     if not image_name.endswith(".bmp"):
                         image_name += ".bmp"
-                elif type == "image/x-icon" or type == "image/vnd.microsoft.icon":
+                elif type in ["image/x-icon", "image/vnd.microsoft.icon"]:
                     if not image_name.endswith(".ico"):
                         image_name += ".ico"
                 elif type == "image/svg+xml":
@@ -1288,13 +1273,9 @@ class googleimagesdownload:
                     )
 
                 # prefix name in image
-                if prefix:
-                    prefix = prefix + " "
-                else:
-                    prefix = ""
-
+                prefix = f"{prefix} " if prefix else ""
                 if no_numbering:
-                    path = main_directory + "/" + dir_name + "/" + prefix + image_name
+                    path = f"{main_directory}/{dir_name}/{prefix}{image_name}"
                 else:
                     path = (
                         main_directory
@@ -1308,14 +1289,12 @@ class googleimagesdownload:
                     )
 
                 try:
-                    output_file = open(path, "wb")
-                    output_file.write(data)
-                    output_file.close()
+                    with open(path, "wb") as output_file:
+                        output_file.write(data)
                     if save_source:
-                        list_path = main_directory + "/" + save_source + ".txt"
-                        list_file = open(list_path, "a")
-                        list_file.write(path + "\t" + img_src + "\n")
-                        list_file.close()
+                        list_path = f"{main_directory}/{save_source}.txt"
+                        with open(list_path, "a") as list_file:
+                            list_file.write(path + "\t" + img_src + "\n")
                     absolute_path = os.path.abspath(path)
                 except OSError as e:
                     download_status = "fail"
@@ -1327,15 +1306,12 @@ class googleimagesdownload:
 
                 # return image name back to calling method to use it for thumbnail downloads
                 download_status = "success"
-                download_message = (
-                    "Completed Image ====> " + prefix + str(count) + "." + image_name
-                )
+                download_message = f"Completed Image ====> {prefix}{str(count)}.{image_name}"
                 return_image_name = prefix + str(count) + "." + image_name
 
                 # image size parameter
-                if not silent_mode:
-                    if print_size:
-                        stark.info("Image Size: " + str(self.file_size(path)))
+                if not silent_mode and print_size:
+                    stark.info(f"Image Size: {str(self.file_size(path))}")
 
             except UnicodeEncodeError as e:
                 download_status = "fail"
@@ -1395,16 +1371,6 @@ class googleimagesdownload:
             download_status = "fail"
             download_message = (
                 "IOError on an image...trying next one..." + " Error: " + str(e)
-            )
-            return_image_name = ""
-            absolute_path = ""
-
-        except IncompleteRead as e:
-            download_status = "fail"
-            download_message = (
-                "IncompleteReadError on an image...trying next one..."
-                + " Error: "
-                + str(e)
             )
             return_image_name = ""
             absolute_path = ""

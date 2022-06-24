@@ -61,7 +61,7 @@ async def chnnlzip(client, message):
                 logging.info(e)
         elif msg.text:
             text_count += 1
-            f = open(os.path.join(dirz + f"{chnnl}.txt"), "a")
+            f = open(os.path.join(f"{dirz}{chnnl}.txt"), "a")
             f.write(f"[{msg.date}] - {msg.text} \n\n")
     total = text_count + media_count
     await pablo.edit(
@@ -175,8 +175,10 @@ async def Download(client, message):
         return
     c_time = time.time()
     Escobar = await message.reply_to_message.download(
-        progress=progress, progress_args=(pablo, c_time, f"`Downloading This File!`")
+        progress=progress,
+        progress_args=(pablo, c_time, "`Downloading This File!`"),
     )
+
     e_time = time.time()
     dl_time = round(s_time - e_time)
     await pablo.edit(engine.get_string("FILE_TOOLS_5").format(Escobar, dl_time))

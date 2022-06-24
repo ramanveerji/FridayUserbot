@@ -89,7 +89,7 @@ async def glitchtgi(client, message):
         return
     photolove = await convert_to_image(message, client)
     #await pablo.edit("`Gli, Glitchiiingggg.....`")
-    pathsn = f"Glitched.gif"
+    pathsn = "Glitched.gif"
     glitch_imgs = glitcher.glitch_image(photolove, 2, gif=True, color_offset=True)
     glitch_imgs[0].save(
         pathsn,
@@ -372,7 +372,7 @@ async def getfakecertificate(client, message):
     d1.text((1433, 1345), text, font=myFont, fill=(51, 51, 51))
     TZ = pytz.timezone(Config.TZ)
     datetime_tz = datetime.now(TZ)
-    oof = datetime_tz.strftime(f"%Y/%m/%d")
+    oof = datetime_tz.strftime("%Y/%m/%d")
     d1.text((961, 2185), oof, font=myFont2, fill=(51, 51, 51))
     d1.text((2441, 2113), random.choice(famous_people), font=myFont3, fill=(51, 51, 51))
     file_name = "certificate.png"
@@ -621,7 +621,7 @@ async def spin(client, message):
         im = im.convert("RGB")
     for k, nums in enumerate(range(1, 360, step), start=0):
         y = im.rotate(nums * spin_dir)
-        y.save(os.path.join(path, "spinx%s.jpg" % k))
+        y.save(os.path.join(path, f"spinx{k}.jpg"))
     output_vid = os.path.join(path, "out.mp4")
     # ;__; Maths lol, y = mx + c
     frate = int(((90 / 59) * step) + (1680 / 59))
